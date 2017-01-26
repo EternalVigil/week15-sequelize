@@ -68,6 +68,49 @@ $(document).ready(function(){
 		return newRow;
 	}
 	
+	function createBurger(burger){
+		burger.preventDefault();
+		var Burger = {
+		burgerName: newBurger.val().trim(),
+			consumed: false
+		};
+		
+		$.post("/api/sburger", Burger, function(){
+			getBurgers();
+		});
+		newBurger.val("");
+	}
+	
+	
+	function editBurger(){
+		var burgerToEdit = $(this).data("sburger");
+		$(this).children().hide();
+		$(this).children("newInput").val(burgerToEdit.burgerName);
+		$(this).children("newInput").focus();
+	}
+	
+	function confirmEdit(burger){
+		var alteredBurger;
+		
+		if (burger.key === "Enter"){
+			alteredBurger = {
+				id: $(this).data("sBurger").id,
+				burgerName: $(this).children("input").val().trim()
+			};
+			$(this).blur();
+			updateBurgerStatus(alteredBurger);
+		}
+		
+	}
+	
+	function cancelEdit(){
+		var alteredBurger = $(this).data("sBurger");
+		$(this).children().hide();
+		$(this).children("newInput").val(alteredBurger.text());
+		$(this).children("span").show();
+		$(this).children("button").show();
+	}
+	
 	function eatBurger(){
 		var eatenBurger = $(this).parent().data("eatenBurger");
 		eatenBurger.consumed = !eatenBurger.consumed;
